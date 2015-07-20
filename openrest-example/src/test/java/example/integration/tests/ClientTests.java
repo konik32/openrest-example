@@ -26,10 +26,10 @@ import example.Application;
 import example.model.Address;
 import example.model.Client;
 import example.model.CompanyData;
-import example.model.County;
+import example.model.Department;
 import example.model.Product;
 import example.repositories.ClientRepository;
-import example.repositories.CountyRepository;
+import example.repositories.DepartmentRepository;
 import example.repositories.ProductRepository;
 import example.utils.UrlHelper;
 
@@ -43,12 +43,12 @@ public class ClientTests {
 	private ClientRepository clientRepository;
 
 	@Autowired
-	private CountyRepository countyRepository;
+	private DepartmentRepository departmentRepository;
 	@Autowired
 	private ProductRepository productRepository;
 
 	private Address address;
-	private County county;
+	private Department department;
 	private CompanyData companyData;
 	private Map<String, Object> addressDto;
 	private Client client;
@@ -57,7 +57,7 @@ public class ClientTests {
 	@Before
 	public void setUp() {
 		clientRepository.deleteAll();
-		countyRepository.deleteAll();
+		departmentRepository.deleteAll();
 		productRepository.deleteAll();
 
 		address = new Address();
@@ -66,23 +66,23 @@ public class ClientTests {
 		address.setHomeNr("123");
 		address.setZip("33-290");
 
-		county = new County();
-		county.setAddress(address);
-		county.setName("County 1");
-		county.setActive(true);
+		department = new Department();
+		department.setAddress(address);
+		department.setName("Department 1");
+		department.setActive(true);
 
 		companyData = new CompanyData();
 		companyData.setKrs("32423");
 		companyData.setNip("32423");
 		companyData.setRegon("32423");
 
-		countyRepository.save(county);
+		departmentRepository.save(department);
 
 		client = new Client();
 		client.setAddress(address);
 		client.setName("Client 1");
 		client.setPhoneNr("213123113");
-		client.setCounty(county);
+		client.setDepartment(department);
 		client.setCompanyData(companyData);
 
 		addressDto = new HashMap<String, Object>();
@@ -90,7 +90,7 @@ public class ClientTests {
 
 		clientDto = new HashMap<String, Object>();
 		clientDto.put("name", "Client 2");
-		clientDto.put("county", "/api/counties/1");
+		clientDto.put("department", "/api/departments/1");
 		clientDto.put("address", addressDto);
 		clientDto.put("companyData", companyData);
 	}
@@ -100,7 +100,7 @@ public class ClientTests {
 		clientRepository.save(client);
 		given().param("orest", "").param("projection", "clientBase").when().get("/api/clients/{id}", client.getId())
 				.then().statusCode(HttpStatus.SC_OK).body("name", Matchers.is(client.getName()))
-				.body("countyName", Matchers.is(county.getName()));
+				.body("departmentName", Matchers.is(department.getName()));
 	}
 
 	@Test
@@ -143,11 +143,11 @@ public class ClientTests {
 	}
 
 	@Test
-	public void shouldReturnCountyClientsWithoutPagination() {
+	public void shouldReturnDepartmentClientsWithoutPagination() {
 		for (int i = 0; i < 5; i++) {
 			given().queryParam("dto", "clientDto").body(clientDto).contentType("application/json").post("/api/clients");
 		}
-		given().param("orest", "").param("projection", "clientList").get("/api/clients/search/countyIdEq(1)").then()
+		given().param("orest", "").param("projection", "clientList").get("/api/clients/search/departmentIdEq(1)").then()
 				.body("page", Matchers.nullValue());
 	}
 

@@ -1,15 +1,15 @@
 package example.expression;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import orest.expression.registry.ExpressionMethod;
 import orest.expression.registry.ExpressionRepository;
 import orest.expression.registry.Join;
 
-import com.mysema.query.jpa.JPASubQuery;
 import com.mysema.query.types.expr.BooleanExpression;
 
 import example.model.Client;
 import example.model.QClient;
-import example.model.QCounty;
 import example.model.QProduct;
 
 @ExpressionRepository(Client.class)
@@ -21,11 +21,25 @@ public class ClientExpressionRepository {
 	}
 
 	@ExpressionMethod(searchMethod = true, defaultedPageable=false)
-	public BooleanExpression countyIdEq(Long countyId) {
-		JPASubQuery subQuery = new JPASubQuery();
-		subQuery.from(QCounty.county);
-		subQuery.where(QCounty.county.id.eq(countyId));
-		return QClient.client.county.id.in(subQuery.list(QCounty.county.id));
+	@PreAuthorize("hasRole('ADMIN')")
+	public BooleanExpression departmentIdEq(Long departmentId) {
+//		JPASubQuery subQuery = new JPASubQuery();
+//		subQuery.from(QDepartment.department);
+//		subQuery.where(QDepartment.department.id.eq(departmentId));
+//		return QClient.client.department.id.in(subQuery.list(QDepartment.department.id));
+		return QClient.client.department.id.eq(departmentId);
 	}
+	
+	@ExpressionMethod
+	public BooleanExpression cityEq(String city){
+		return QClient.client.address.city.eq(city);
+	}
+	
+	@ExpressionMethod
+	public BooleanExpression nameStartsWith(String name){
+		return QClient.client.name.startsWith(name);
+	}
+	
+	
 
 }

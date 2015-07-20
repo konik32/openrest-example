@@ -14,11 +14,11 @@ import lombok.Setter;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-@Table(name = "counties")
+@Table(name = "departments")
 @Entity
 @Getter
 @Setter
-public class County extends AbstractPersistable<Long> {
+public class Department extends AbstractPersistable<Long> {
 
 	/**
 	 * 

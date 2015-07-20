@@ -14,4 +14,8 @@ public class Validators {
 		else
 			return companyDataDto.getRegon() != null && companyDataDto.getKrs() != null;
 	}
+	
+	public boolean validatePassword(String password){
+		return password.equals("password");
+	}
 }

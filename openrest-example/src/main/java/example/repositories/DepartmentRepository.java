@@ -8,10 +8,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import example.model.County;
+import example.model.Department;
 
-@RepositoryRestResource(path = "counties")
-public interface CountyRepository extends PagingAndSortingRepository<County, Long>,
-		PredicateContextQueryDslRepository<County> {
+@RepositoryRestResource(path = "departments")
+public interface DepartmentRepository extends PagingAndSortingRepository<Department, Long>,
+		PredicateContextQueryDslRepository<Department> {
 
 }

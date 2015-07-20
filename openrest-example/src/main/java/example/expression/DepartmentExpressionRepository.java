@@ -6,15 +6,15 @@ import orest.expression.registry.StaticFilter;
 
 import com.mysema.query.types.expr.BooleanExpression;
 
-import example.model.County;
-import example.model.QCounty;
+import example.model.Department;
+import example.model.QDepartment;
 
-@ExpressionRepository(County.class)
-public class CountyExpressionRepository {
+@ExpressionRepository(Department.class)
+public class DepartmentExpressionRepository {
 
 	@StaticFilter
-	@ExpressionMethod(searchMethod=true)
+	@ExpressionMethod
 	public BooleanExpression active() {
-		return QCounty.county.active.eq(true);
+		return QDepartment.department.active.eq(true);
 	}
 }

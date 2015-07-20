@@ -38,7 +38,7 @@ public class Client extends AbstractPersistable<Long> {
 	private CompanyData companyData;
 
 	@ManyToOne
-	private County county;
+	private Department department;
 
 	@ManyToMany()
 	@JoinTable(name = "client_products", joinColumns = { @JoinColumn(name = "client_id", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "product_id", referencedColumnName = "id") }, uniqueConstraints = { @UniqueConstraint(name = "client_product_uq", columnNames = {

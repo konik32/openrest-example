@@ -8,12 +8,12 @@ import org.springframework.data.rest.core.config.Projection;
 import example.model.Client;
 
 @Projection(types = Client.class, name = "clientBase")
-@Expand("county")
+@Expand("department")
 public interface ClientBaseProjection {
 
 	String getName();
 	
-	@Value("#{target.county.name}")
-	String getCountyName();
+	@Value("#{target.department.name}")
+	String getDepartmentName();
 	
 }

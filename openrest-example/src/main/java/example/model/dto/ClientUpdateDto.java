@@ -5,7 +5,7 @@ import orest.dto.Dto;
 import orest.dto.Dto.DtoType;
 import orest.dto.Nullable;
 import example.model.Client;
-import example.model.County;
+import example.model.Department;
 
 @Data
 @Dto(entityType = Client.class, name = "clientUpdate", type = DtoType.MERGE)

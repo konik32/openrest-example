@@ -9,7 +9,7 @@
 			<dependency>
 				<groupId>stalkon.data</groupId>
 				<artifactId>openrest</artifactId>
-				<version>0.1.0.RELEASE</version>
+				<version>0.1.1.RELEASE</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -20,20 +20,8 @@
 	</parent>
 	<repositories>
 		<repository>
-			<id>spring-snasphot</id>
-			<url>https://repo.spring.io/libs-snapshot</url>
-		</repository>
-		<repository>
-			<id>crypto-mvn-repo</id>
-			<url>https://raw.github.com/konik32/crypto/mvn-repo/</url>
-		</repository>
-		<repository>
 			<id>openrest-mvn-repo</id>
 			<url>https://raw.github.com/konik32/openrest/mvn-repo/</url>
-		</repository>
-		<repository>
-			<id>jwt-mvn-repo</id>
-			<url>https://raw.github.com/konik32/jwt/mvn-repo/</url>
 		</repository>
 	</repositories>
 
@@ -99,11 +87,6 @@
 			<version>3.6.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
@@ -114,19 +97,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>1.3.2</version>
-		</dependency>
-		<dependency>
 			<groupId>stalkon.data</groupId>
 			<artifactId>openrest</artifactId>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>stalkon</groupId> -->
-		<!-- <artifactId>jwt</artifactId> -->
-		<!-- <version>1.0.1-RELEASE</version> -->
-		<!-- </dependency> -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
