@@ -2,7 +2,7 @@ package example.integration.tests;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +13,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -43,6 +48,8 @@ public class ContanctPersonTests {
 
 	private Department department;
 
+	
+	
 	@Before
 	public void setUp() {
 		departmentRepository.deleteAll();
@@ -80,8 +87,10 @@ public class ContanctPersonTests {
 
 		ContactPerson personInDb = contactPersonRepository.findOne(UrlHelper.getIdFromLocation(location));
 		assertNotNull(personInDb);
-		given().param("projection", "departmentData").param("orest").get("/api/departments/"+ department.getId()).then()
+		given().param("projection", "departmentData").param("orest").get("/api/departments/"+ department.getId()).then().statusCode(200)
 				.body("contactPersons", hasSize(1));
 	}
+	
+	
 
 }

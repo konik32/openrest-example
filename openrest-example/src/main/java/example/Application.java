@@ -10,6 +10,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import example.model.Client;
+
 @SpringBootApplication(exclude = { org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class })
 @EnableOpenRest
 public class Application {
@@ -28,6 +30,7 @@ public class Application {
 	@Autowired
 	public void configureRest(RepositoryRestConfiguration config) {
 		config.setBaseUri("/api");
+		config.exposeIdsFor(Client.class);
 	}
 
 }

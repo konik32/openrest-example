@@ -9,6 +9,7 @@ import orest.expression.registry.Join;
 import com.mysema.query.types.expr.BooleanExpression;
 
 import example.model.Client;
+import example.model.QAddress;
 import example.model.QClient;
 import example.model.QProduct;
 
@@ -36,9 +37,31 @@ public class ClientExpressionRepository {
 	}
 	
 	@ExpressionMethod
-	public BooleanExpression nameStartsWith(String name){
-		return QClient.client.name.startsWith(name);
+	public BooleanExpression nameLike(String name){
+		return QClient.client.name.like("%" + name +"%");
 	}
+	
+	@ExpressionMethod
+	public BooleanExpression cityLike(String city){
+		return QClient.client.address.city.like("%" + city +"%");
+	}
+	
+	@ExpressionMethod
+	public BooleanExpression streetLike(String street){
+		return QClient.client.address.street.like("%" + street +"%");
+	}
+	
+	@ExpressionMethod
+	public BooleanExpression zipLike(String zip){
+		return QClient.client.address.zip.like("%" + zip +"%");
+	}
+	
+	@ExpressionMethod
+	public BooleanExpression phoneNrLike(String phoneNr){
+		return QClient.client.phoneNr.like("%" + phoneNr +"%");
+	}
+	
+	
 	
 	
 

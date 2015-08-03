@@ -9,7 +9,7 @@
 			<dependency>
 				<groupId>stalkon.data</groupId>
 				<artifactId>openrest</artifactId>
-				<version>0.1.1.RELEASE</version>
+				<version>0.2.1.RELEASE</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
