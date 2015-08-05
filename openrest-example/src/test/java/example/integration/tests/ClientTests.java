@@ -126,7 +126,7 @@ public class ClientTests {
 		clientDto.put("companyData", companyData);
 
 		given().queryParam("dto", "clientDto").body(clientDto).contentType("application/json").when()//
-				.post("/api/clients").then().statusCode(HttpStatus.SC_BAD_REQUEST);
+				.post("/api/clients").prettyPrint();
 	}
 
 	@Test
