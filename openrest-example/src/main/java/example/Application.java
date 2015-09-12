@@ -1,6 +1,8 @@
 package example;
 
 import orest.config.EnableOpenRest;
+import orest.projection.authorization.SecureAnnProjectionAuthorizationStrategy;
+import orest.security.ExpressionEvaluator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -32,5 +34,6 @@ public class Application {
 		config.setBaseUri("/api");
 		config.exposeIdsFor(Client.class);
 	}
+	
 
 }

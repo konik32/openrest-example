@@ -1,15 +1,14 @@
 package example.expression;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import orest.expression.registry.ExpressionMethod;
 import orest.expression.registry.ExpressionRepository;
 import orest.expression.registry.Join;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import com.mysema.query.types.expr.BooleanExpression;
 
 import example.model.Client;
-import example.model.QAddress;
 import example.model.QClient;
 import example.model.QProduct;
 

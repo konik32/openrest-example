@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.HttpStatus;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,135 +40,177 @@ import example.utils.UrlHelper;
 @IntegrationTest
 public class ClientTests {
 
-	@Autowired
-	private ClientRepository clientRepository;
+    @Autowired
+    private ClientRepository clientRepository;
 
-	@Autowired
-	private DepartmentRepository departmentRepository;
-	@Autowired
-	private ProductRepository productRepository;
+    @Autowired
+    private DepartmentRepository departmentRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
-	private Address address;
-	private Department department;
-	private CompanyData companyData;
-	private Map<String, Object> addressDto;
-	private Client client;
-	Map<String, Object> clientDto = new HashMap<String, Object>();
+    private Address address;
+    private Department department;
+    private CompanyData companyData;
+    private Map<String, Object> addressDto;
+    private Client client;
+    Map<String, Object> clientDto = new HashMap<String, Object>();
 
-	@Before
-	public void setUp() {
-		clientRepository.deleteAll();
-		departmentRepository.deleteAll();
-		productRepository.deleteAll();
+    @Before
+    public void setUp() {
+        clientRepository.deleteAll();
+        departmentRepository.deleteAll();
+        productRepository.deleteAll();
 
-		address = new Address();
-		address.setCity("Warsaw");
-		address.setStreet("Krakowska");
-		address.setHomeNr("123");
-		address.setZip("33-290");
+        department = createDepartment();
 
-		department = new Department();
-		department.setAddress(address);
-		department.setName("Department 1");
-		department.setActive(true);
+        companyData = createCompanyData();
 
-		companyData = new CompanyData();
-		companyData.setKrs("32423");
-		companyData.setNip("32423");
-		companyData.setRegon("32423");
+        departmentRepository.save(department);
 
-		departmentRepository.save(department);
+        client = createClient(department);
 
-		client = new Client();
-		client.setAddress(address);
-		client.setName("Client 1");
-		client.setPhoneNr("213123113");
-		client.setDepartment(department);
-		client.setCompanyData(companyData);
+        addressDto = new HashMap<String, Object>();
+        addressDto.put("address", "Krakowska 57, 33-300 Warszawa");
 
-		addressDto = new HashMap<String, Object>();
-		addressDto.put("address", "Krakowska 57, 33-300 Warszawa");
+        clientDto = new HashMap<String, Object>();
+        clientDto.put("name", "Client 2");
+        clientDto.put("department", "/api/departments/1");
+        clientDto.put("address", addressDto);
+        clientDto.put("companyData", companyData);
+    }
 
-		clientDto = new HashMap<String, Object>();
-		clientDto.put("name", "Client 2");
-		clientDto.put("department", "/api/departments/1");
-		clientDto.put("address", addressDto);
-		clientDto.put("companyData", companyData);
-	}
+    private Address createAddress() {
+        Address address = new Address();
+        address.setCity("Warsaw");
+        address.setStreet("Krakowska");
+        address.setHomeNr("123");
+        address.setZip("33-290");
+        return address;
+    }
 
-	@Test
-	public void shouldReturnClientBaseProjection() {
-		clientRepository.save(client);
-		given().param("orest", "").param("projection", "clientBase").when().get("/api/clients/{id}", client.getId())
-				.then().statusCode(HttpStatus.SC_OK).body("name", Matchers.is(client.getName()))
-				.body("departmentName", Matchers.is(department.getName()));
-	}
+    private Client createClient(Department department) {
+        Client client = new Client();
+        client.setAddress(createAddress());
+        client.setName("Client 1");
+        client.setPhoneNr("213123113");
+        client.setDepartment(department);
+        client.setCompanyData(createCompanyData());
+        return client;
+    }
 
-	@Test
-	public void shouldCreateClient() {
+    private Department createDepartment() {
+        Department department = new Department();
+        department.setAddress(createAddress());
+        department.setName("Department 1");
+        department.setActive(true);
+        return department;
+    }
 
-		Response response = given().queryParam("dto", "clientDto").body(clientDto).contentType("application/json")
-				.when().post("/api/clients").andReturn();
+    private CompanyData createCompanyData() {
+        CompanyData companyData = new CompanyData();
+        companyData.setKrs("32423");
+        companyData.setNip("32423");
+        companyData.setRegon("32423");
+        return companyData;
+    }
 
-		assertEquals(HttpStatus.SC_CREATED, response.statusCode());
-		String location = response.getHeader("Location");
+    @Test
+    public void shouldReturnClientBaseProjection() {
+        clientRepository.save(client);
+        given().param("orest", "").param("projection", "clientBase").when().get("/api/clients/{id}", client.getId()).then()
+                .statusCode(HttpStatus.SC_OK).body("name", Matchers.is(client.getName()))
+                .body("departmentName", Matchers.is(department.getName()));
+    }
 
-		Client clientInDb = clientRepository.findOne(UrlHelper.getIdFromLocation(location));
-		assertEquals("Client 2", clientInDb.getName());
-		assertEquals("Warszawa", clientInDb.getAddress().getCity());
-		assertEquals("Krakowska", clientInDb.getAddress().getStreet());
-		assertEquals("57", clientInDb.getAddress().getHomeNr());
-		assertEquals("33-300", clientInDb.getAddress().getZip());
-	}
+    @Test
+    public void shouldCountAllClients() {
+        for (int i = 0; i < 10; i++)
+            clientRepository.save(createClient(department));
+        given().param("orest").param("count").when().get("/api/clients").then().statusCode(HttpStatus.SC_OK)
+                .body("count", Matchers.equalTo(10));
+    }
 
-	@Test
-	public void shouldBeBadRequestDueToCompanyDataExpressionValidator() {
-		companyData.setNip(null);
-		clientDto.put("companyData", companyData);
+    @Test
+    public void shouldCountClientsWithDepartmentId() {
+        Department department = createDepartment();
+        departmentRepository.save(department);
+        for (int i = 0; i < 5; i++) {
+            clientRepository.save(createClient(department));
+        }
+        for (int i = 0; i < 5; i++)
+            clientRepository.save(createClient(this.department));
+        given().param("orest").param("count").when().get("/api/clients/search/departmentIdEq({id})",department.getId()).then()
+                .statusCode(HttpStatus.SC_OK).body("count", Matchers.equalTo(5));
+    }
 
-		given().queryParam("dto", "clientDto").body(clientDto).contentType("application/json").when()//
-				.post("/api/clients").prettyPrint();
-	}
+    @Test
+    public void shouldCreateClient() {
 
-	@Test
-	public void shouldUpdatePhoneNrToNull() {
-		clientDto.put("phoneNr", null);
-		Client clientInDb = clientRepository.save(client);
-		assertNotNull(clientInDb.getPhoneNr());
-		given()//
-		.queryParam("dto", "clientUpdate").body(clientDto).contentType("application/json").when()//
-				.patch("/api/clients/{id}", clientInDb.getId()).then().statusCode(HttpStatus.SC_NO_CONTENT);
+        Response response = given().queryParam("dto", "clientDto").body(clientDto).contentType("application/json").when()
+                .post("/api/clients").andReturn();
 
-		clientInDb = clientRepository.findOne(clientInDb.getId());
-		assertEquals(null, clientInDb.getPhoneNr());
-	}
+        assertEquals(HttpStatus.SC_CREATED, response.statusCode());
+        String location = response.getHeader("Location");
 
-	@Test
-	public void shouldReturnDepartmentClientsWithoutPagination() {
-		for (int i = 0; i < 5; i++) {
-			given().queryParam("dto", "clientDto").body(clientDto).contentType("application/json").post("/api/clients");
-		}
-		given().param("orest", "").param("projection", "clientList").get("/api/clients/search/departmentIdEq(1)").then()
-				.body("page", Matchers.nullValue());
-	}
+        Client clientInDb = clientRepository.findOne(UrlHelper.getIdFromLocation(location));
+        assertEquals("Client 2", clientInDb.getName());
+        assertEquals("Warszawa", clientInDb.getAddress().getCity());
+        assertEquals("Krakowska", clientInDb.getAddress().getStreet());
+        assertEquals("57", clientInDb.getAddress().getHomeNr());
+        assertEquals("33-300", clientInDb.getAddress().getZip());
+    }
 
-	@Test
-	public void shouldReturnClientsWithProduct() {
-		Product product = new Product();
-		product.setProductionYear(1920);
-		product.setPrice(100);
-		productRepository.save(product);
+    @Test
+    public void shouldBeBadRequestDueToCompanyDataExpressionValidator() {
+        companyData.setNip(null);
+        clientDto.put("companyData", companyData);
 
-		for (int i = 0; i < 10; i++) {
-			String location = given().queryParam("dto", "clientDto").body(clientDto).contentType("application/json").post("/api/clients").thenReturn().getHeader("Location");
-			if (i % 2 == 0)
-				given().queryParam("dto", "clientProductDto")
-						.body(Collections.singletonMap("client", "/api/clients/" + UrlHelper.getIdFromLocation(location)))
-						.contentType("application/json").patch("/api/products/" + product.getId());
-		}
+        Response response = given().queryParam("dto", "clientDto").body(clientDto).contentType("application/json").when()//
+                .post("/api/clients");
+        response.prettyPrint();
+        response.then().statusCode(400);
+    }
 
-		given().queryParam("orest", "").when().get("/api/clients/search/productIdEq({id})", product.getId()).then()
-				.statusCode(HttpStatus.SC_OK).body("page.totalElements", equalTo(5));
-	}
+    @Test
+    public void shouldUpdatePhoneNrToNull() {
+        clientDto.put("phoneNr", null);
+        Client clientInDb = clientRepository.save(client);
+        assertNotNull(clientInDb.getPhoneNr());
+        given()//
+        .queryParam("dto", "clientUpdate").body(clientDto).contentType("application/json").when()//
+                .patch("/api/clients/{id}", clientInDb.getId()).then().statusCode(HttpStatus.SC_NO_CONTENT);
+
+        clientInDb = clientRepository.findOne(clientInDb.getId());
+        assertEquals(null, clientInDb.getPhoneNr());
+    }
+
+    @Test
+    public void shouldReturnDepartmentClientsWithoutPagination() {
+        for (int i = 0; i < 5; i++) {
+            given().queryParam("dto", "clientDto").body(clientDto).contentType("application/json").post("/api/clients");
+        }
+        given().param("orest", "").param("projection", "clientList").get("/api/clients/search/departmentIdEq({id})", department.getId()).then()
+                .body("page", Matchers.nullValue());
+    }
+
+    @Test
+    public void shouldReturnClientsWithProduct() {
+        Product product = new Product();
+        product.setProductionYear(1920);
+        product.setPrice(100);
+        productRepository.save(product);
+
+        for (int i = 0; i < 10; i++) {
+            String location = given().queryParam("dto", "clientDto").body(clientDto).contentType("application/json").post("/api/clients")
+                    .thenReturn().getHeader("Location");
+            if (i % 2 == 0)
+                given().queryParam("dto", "clientProductDto")
+                        .body(Collections.singletonMap("client", "/api/clients/" + UrlHelper.getIdFromLocation(location)))
+                        .contentType("application/json").patch("/api/products/" + product.getId());
+        }
+
+        given().queryParam("orest", "").when().get("/api/clients/search/productIdEq({id})", product.getId()).then()
+                .statusCode(HttpStatus.SC_OK).body("page.totalElements", equalTo(5));
+    }
 
 }

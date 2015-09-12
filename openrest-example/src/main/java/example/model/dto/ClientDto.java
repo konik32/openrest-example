@@ -5,7 +5,7 @@ import javax.validation.Valid;
 import lombok.Data;
 import orest.dto.Dto;
 import orest.dto.Dto.DtoType;
-import orest.dto.validation.annotation.ExpressionValid;
+import orest.dto.validation.annotation.ValidateExpression;
 import example.model.Client;
 import example.model.Department;
 
@@ -19,7 +19,7 @@ public class ClientDto {
 	private AddressDto address;
 
 	@Valid
-	@ExpressionValid(value="#{@validators.validateCompanyDataDto(dto.companyData)}", message="CompanyData NIP, REGON, KRS must be set")
+	@ValidateExpression(value="#{@validators.validateCompanyDataDto(dto.companyData)}", message="CompanyData NIP, REGON, KRS must be set")
 	private CompanyDataDto companyData;
 
 	private Department department;

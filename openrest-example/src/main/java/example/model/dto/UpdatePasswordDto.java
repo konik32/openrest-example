@@ -3,7 +3,7 @@ package example.model.dto;
 import lombok.Data;
 import orest.dto.Dto;
 import orest.dto.Dto.DtoType;
-import orest.dto.validation.annotation.ExpressionValid;
+import orest.dto.validation.annotation.ValidateExpression;
 import example.model.User;
 
 
@@ -14,8 +14,8 @@ public class UpdatePasswordDto {
 	
 	private String password;
 	
-	@ExpressionValid("#{@validators.validatePassword(dto.oldPassword)}")
+	@ValidateExpression("#{@validators.validatePassword(dto.oldPassword)}")
 	private String oldPassword;
-	@ExpressionValid("#{dto.confirmPassword.equals(dto.password)}")
+	@ValidateExpression("#{dto.confirmPassword.equals(dto.password)}")
 	private String confirmPassword;
 }

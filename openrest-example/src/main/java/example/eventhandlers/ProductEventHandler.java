@@ -3,6 +3,7 @@ package example.eventhandlers;
 import orest.event.annotation.HandleBeforeSaveWithDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 

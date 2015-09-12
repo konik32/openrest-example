@@ -9,12 +9,17 @@ import com.mysema.query.types.expr.BooleanExpression;
 import example.model.Department;
 import example.model.QDepartment;
 
-@ExpressionRepository(Department.class)
+@ExpressionRepository(value = Department.class, defaultedPageable = false)
 public class DepartmentExpressionRepository {
 
-	@StaticFilter
-	@ExpressionMethod
-	public BooleanExpression active() {
-		return QDepartment.department.active.eq(true);
-	}
+    @StaticFilter
+    @ExpressionMethod
+    public BooleanExpression active() {
+        return QDepartment.department.active.eq(true);
+    }
+
+    @ExpressionMethod(searchMethod = true)
+    public BooleanExpression nameEq(String name) {
+        return QDepartment.department.name.eq(name);
+    }
 }
