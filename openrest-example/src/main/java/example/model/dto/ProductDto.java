@@ -1,8 +1,8 @@
 package example.model.dto;
 
 import lombok.Data;
-import orest.dto.Dto;
-import orest.dto.Dto.DtoType;
+import pl.openrest.dto.annotations.Dto;
+import pl.openrest.dto.registry.DtoType;
 import example.model.Product;
 
 @Data

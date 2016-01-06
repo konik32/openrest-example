@@ -3,14 +3,16 @@ package example.model.dto;
 import javax.validation.Valid;
 
 import lombok.Data;
-import orest.dto.Dto;
-import orest.dto.Dto.DtoType;
+import pl.openrest.dto.annotations.Dto;
+import pl.openrest.dto.registry.DtoType;
+import pl.openrest.dto.security.authorization.annotation.AuthorizeDto;
 import example.model.Department;
+import example.model.dto.authorization.DepartmentIsActive;
 
 
 @Data
 @Dto(entityType = Department.class, name = "departmentDto", type = DtoType.CREATE)
-public class DeparmentDto {
+public class DepartmentDto {
 
 	private String name;
 	@Valid

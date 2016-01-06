@@ -36,5 +36,11 @@ public class Address {
 	@NotEmpty
 	@Column(nullable = false, name = "home_nr", length = 20)
 	private String homeNr;
+	
+	private String type;
+	
+	public void setCity(String city){
+	    this.city = city;
+	}
 
 }

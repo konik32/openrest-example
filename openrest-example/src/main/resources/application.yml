@@ -1,10 +1,10 @@
-spring:
-  jpa:
-    database: mysql
-    hibernate.ddl-auto: update
-    show-sql: true
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver     
-    url: "jdbc:mysql://localhost:3306/orestexample?useUnicode=yes&characterEncoding=utf8"
-    username: root
-    password: null
+#spring:
+#  jpa:
+#    database: mysql
+#    hibernate.ddl-auto: update
+#    show-sql: true
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver     
+#    url: "jdbc:mysql://localhost:3306/orestexample?useUnicode=yes&characterEncoding=utf8"
+#    username: root
+#    password: null

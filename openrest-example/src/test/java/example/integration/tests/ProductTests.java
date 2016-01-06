@@ -43,13 +43,13 @@ public class ProductTests {
             productRepository.save(product);
         }
 
-        given().param("orest", "").param("filters", "priceBetween(0;25)").get("/api/products").then()
+        given().param("orest", "").param("filter", "priceBetween(0;25)").get("/api/products").then()
                 .body("page.totalElements", equalTo(3));
 
-        given().param("orest", "").param("filters", "productionYearGt(1920)").get("/api/products").then()
+        given().param("orest", "").param("filter", "productionYearGt(1920)").get("/api/products").then()
                 .body("page.totalElements", equalTo(9));
 
-        given().param("orest", "").param("filters", "nameLike(IPHONE);or;productionYearGt(2000);and;priceBetween(0;25)")
+        given().param("orest", "").param("filter", "nameLike(IPHONE);or;productionYearGt(2000);and;priceBetween(0;25)")
                 .get("/api/products").then().body("page.totalElements", equalTo(10));
     }
 }

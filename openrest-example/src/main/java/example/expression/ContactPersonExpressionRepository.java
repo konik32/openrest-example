@@ -1,10 +1,9 @@
 package example.expression;
 
-import orest.expression.registry.ExpressionRepository;
-
+import pl.openrest.filters.predicate.annotation.PredicateRepository;
 import example.model.ContactPerson;
 
-@ExpressionRepository(ContactPerson.class)
+@PredicateRepository(ContactPerson.class)
 public class ContactPersonExpressionRepository {
 
 }

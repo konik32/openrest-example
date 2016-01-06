@@ -1,10 +1,11 @@
 package example.expression;
 
-import orest.expression.registry.ExpressionMethod;
-import orest.expression.registry.ExpressionRepository;
-import orest.expression.registry.Join;
-
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import pl.openrest.filters.predicate.annotation.Predicate;
+import pl.openrest.filters.predicate.annotation.Predicate.PredicateType;
+import pl.openrest.filters.predicate.annotation.PredicateRepository;
+import pl.openrest.filters.query.annotation.Join;
 
 import com.mysema.query.types.expr.BooleanExpression;
 
@@ -12,15 +13,15 @@ import example.model.Client;
 import example.model.QClient;
 import example.model.QProduct;
 
-@ExpressionRepository(Client.class)
+@PredicateRepository(Client.class)
 public class ClientExpressionRepository {
 
-	@ExpressionMethod(searchMethod = true, joins = @Join(value = "products"))
+	@Predicate(type=PredicateType.SEARCH, joins = @Join(value = "products"))
 	public BooleanExpression productIdEq(Long productId) {
 		return QProduct.product.id.eq(productId);
 	}
 
-	@ExpressionMethod(searchMethod = true, defaultedPageable=false)
+	@Predicate(type=PredicateType.SEARCH, defaultedPageable=false)
 	@PreAuthorize("hasRole('ADMIN')")
 	public BooleanExpression departmentIdEq(Long departmentId) {
 //		JPASubQuery subQuery = new JPASubQuery();
@@ -30,32 +31,32 @@ public class ClientExpressionRepository {
 		return QClient.client.department.id.eq(departmentId);
 	}
 	
-	@ExpressionMethod
+	@Predicate
 	public BooleanExpression cityEq(String city){
 		return QClient.client.address.city.eq(city);
 	}
 	
-	@ExpressionMethod
+	@Predicate
 	public BooleanExpression nameLike(String name){
 		return QClient.client.name.like("%" + name +"%");
 	}
 	
-	@ExpressionMethod
+	@Predicate
 	public BooleanExpression cityLike(String city){
 		return QClient.client.address.city.like("%" + city +"%");
 	}
 	
-	@ExpressionMethod
+	@Predicate
 	public BooleanExpression streetLike(String street){
 		return QClient.client.address.street.like("%" + street +"%");
 	}
 	
-	@ExpressionMethod
+	@Predicate
 	public BooleanExpression zipLike(String zip){
 		return QClient.client.address.zip.like("%" + zip +"%");
 	}
 	
-	@ExpressionMethod
+	@Predicate
 	public BooleanExpression phoneNrLike(String phoneNr){
 		return QClient.client.phoneNr.like("%" + phoneNr +"%");
 	}

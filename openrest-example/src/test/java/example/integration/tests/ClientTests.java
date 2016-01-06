@@ -139,7 +139,7 @@ public class ClientTests {
         }
         for (int i = 0; i < 5; i++)
             clientRepository.save(createClient(this.department));
-        given().param("orest").param("count").when().get("/api/clients/search/departmentIdEq({id})",department.getId()).then()
+        given().param("orest").param("count").when().get("/api/clients/search/departmentIdEq({id})", department.getId()).then()
                 .statusCode(HttpStatus.SC_OK).body("count", Matchers.equalTo(5));
     }
 
@@ -189,8 +189,8 @@ public class ClientTests {
         for (int i = 0; i < 5; i++) {
             given().queryParam("dto", "clientDto").body(clientDto).contentType("application/json").post("/api/clients");
         }
-        given().param("orest", "").param("projection", "clientList").get("/api/clients/search/departmentIdEq({id})", department.getId()).then()
-                .body("page", Matchers.nullValue());
+        given().param("orest", "").param("projection", "clientList").get("/api/clients/search/departmentIdEq({id})", department.getId())
+                .then().body("page", Matchers.nullValue());
     }
 
     @Test

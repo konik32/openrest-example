@@ -1,27 +1,27 @@
 package example.expression;
 
-import orest.expression.registry.ExpressionMethod;
-import orest.expression.registry.ExpressionRepository;
+import pl.openrest.filters.predicate.annotation.Predicate;
+import pl.openrest.filters.predicate.annotation.PredicateRepository;
 
 import com.mysema.query.types.expr.BooleanExpression;
 
 import example.model.Product;
 import example.model.QProduct;
 
-@ExpressionRepository(Product.class)
+@PredicateRepository(Product.class)
 public class ProductExpressionRepository {
 
-	@ExpressionMethod
+	@Predicate
 	public BooleanExpression priceBetween(Integer from, Integer to) {
 		return QProduct.product.price.between(from, to);
 	}
 
-	@ExpressionMethod
+	@Predicate
 	public BooleanExpression nameLike(String name) {
 		return QProduct.product.name.like(name + "%");
 	}
 
-	@ExpressionMethod
+	@Predicate
 	public BooleanExpression productionYearGt(Integer productionYear) {
 		return QProduct.product.productionYear.gt(productionYear);
 	}

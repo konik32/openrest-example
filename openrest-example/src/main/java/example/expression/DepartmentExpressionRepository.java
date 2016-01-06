@@ -1,24 +1,25 @@
 package example.expression;
 
-import orest.expression.registry.ExpressionMethod;
-import orest.expression.registry.ExpressionRepository;
-import orest.expression.registry.StaticFilter;
+import pl.openrest.filters.predicate.annotation.Predicate;
+import pl.openrest.filters.predicate.annotation.Predicate.PredicateType;
+import pl.openrest.filters.predicate.annotation.PredicateRepository;
+import pl.openrest.filters.query.annotation.StaticFilter;
 
 import com.mysema.query.types.expr.BooleanExpression;
 
 import example.model.Department;
 import example.model.QDepartment;
 
-@ExpressionRepository(value = Department.class, defaultedPageable = false)
+@PredicateRepository(value = Department.class, defaultedPageable = false)
 public class DepartmentExpressionRepository {
 
     @StaticFilter
-    @ExpressionMethod
+    @Predicate
     public BooleanExpression active() {
         return QDepartment.department.active.eq(true);
     }
 
-    @ExpressionMethod(searchMethod = true)
+    @Predicate(type = PredicateType.SEARCH)
     public BooleanExpression nameEq(String name) {
         return QDepartment.department.name.eq(name);
     }

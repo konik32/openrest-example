@@ -1,11 +1,10 @@
 package example.model.dto;
 
 import lombok.Data;
-import orest.dto.Dto;
-import orest.dto.Dto.DtoType;
-import orest.dto.Nullable;
+import pl.openrest.dto.annotations.Dto;
+import pl.openrest.dto.annotations.Nullable;
+import pl.openrest.dto.registry.DtoType;
 import example.model.Client;
-import example.model.Department;
 
 @Data
 @Dto(entityType = Client.class, name = "clientUpdate", type = DtoType.MERGE)

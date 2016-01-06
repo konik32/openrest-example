@@ -1,13 +1,6 @@
 package example.integration.tests;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
@@ -20,18 +13,15 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 
 import example.Application;
 import example.model.Address;
-import example.model.Client;
-import example.model.CompanyData;
 import example.model.Department;
-import example.model.Product;
-import example.repositories.ClientRepository;
+import example.model.dto.AddressDto;
+import example.model.dto.DepartmentDto;
 import example.repositories.DepartmentRepository;
-import example.repositories.ProductRepository;
-import example.utils.UrlHelper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -88,12 +78,12 @@ public class DepartmentTests {
             department.setActive(false);
             departmentRepository.save(department);
         }
-        given().param("orest", "").get("/api/departments").then().statusCode(HttpStatus.SC_OK)
+        given().contentType(ContentType.JSON).param("orest", "").get("/api/departments").then().statusCode(HttpStatus.SC_OK)
                 .body("page", Matchers.nullValue(), "_embedded", Matchers.nullValue());
-        given().param("orest", "").get("/api/departments/search/nameEq({name})","Department 1").then().statusCode(HttpStatus.SC_OK)
-        .body("page", Matchers.nullValue(), "_embedded", Matchers.nullValue());
+        given().contentType(ContentType.JSON).param("orest", "").get("/api/departments/search/nameEq({name})", "Department 1").then().statusCode(HttpStatus.SC_OK)
+                .body("page", Matchers.nullValue(), "_embedded", Matchers.nullValue());
     }
-    
+
     @Test
     public void shouldAddStaticFiltersToCount() {
         departmentRepository.deleteAll();
@@ -104,8 +94,8 @@ public class DepartmentTests {
         }
         given().param("orest").param("count").get("/api/departments").then().statusCode(HttpStatus.SC_OK)
                 .body("count", Matchers.equalTo(0));
-        given().param("orest").param("count").get("/api/departments/search/nameEq({name})", "Department 1").then().statusCode(HttpStatus.SC_OK)
-        .body("count", Matchers.equalTo(0));
+        given().param("orest").param("count").get("/api/departments/search/nameEq({name})", "Department 1").then()
+                .statusCode(HttpStatus.SC_OK).body("count", Matchers.equalTo(0));
     }
 
     @Test

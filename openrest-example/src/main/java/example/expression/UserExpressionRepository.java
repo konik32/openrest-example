@@ -1,14 +1,8 @@
 package example.expression;
 
-import orest.expression.registry.ExpressionMethod;
-import orest.expression.registry.ExpressionRepository;
-import orest.expression.registry.StaticFilter;
-
-import com.mysema.query.types.expr.BooleanExpression;
-
-import example.model.QDepartment;
+import pl.openrest.filters.predicate.annotation.PredicateRepository;
 import example.model.User;
 
-@ExpressionRepository(User.class)
+@PredicateRepository(User.class)
 public class UserExpressionRepository {
 }

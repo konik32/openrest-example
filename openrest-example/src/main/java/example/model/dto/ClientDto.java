@@ -3,9 +3,9 @@ package example.model.dto;
 import javax.validation.Valid;
 
 import lombok.Data;
-import orest.dto.Dto;
-import orest.dto.Dto.DtoType;
-import orest.dto.validation.annotation.ValidateExpression;
+import pl.openrest.dto.annotations.Dto;
+import pl.openrest.dto.registry.DtoType;
+import pl.openrest.dto.validation.annotation.ValidateExpression;
 import example.model.Client;
 import example.model.Department;
 
